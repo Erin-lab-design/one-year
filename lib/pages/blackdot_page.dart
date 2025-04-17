@@ -1,102 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../widgets/day_dot.dart';
+
+int getDayOfYear() {
+  final now = DateTime.now();
+  final startOfYear = DateTime(now.year, 1, 1);
+  return now.difference(startOfYear).inDays + 1;
+}
+
+int getTotalDaysInYear() {
+  final now = DateTime.now();
+  final nextYear = DateTime(now.year + 1, 1, 1);
+  final startOfYear = DateTime(now.year, 1, 1);
+  return nextYear.difference(startOfYear).inDays;
+}
 
 class BlackDotPage extends StatelessWidget {
   const BlackDotPage({super.key});
 
-  int getDayOfYear() {
-    final now = DateTime.now();
-    return int.parse(DateFormat("D").format(now));
-  }
-
-  int getTotalDaysInYear() {
-    final now = DateTime.now();
-    final end = DateTime(now.year, 12, 31);
-    final start = DateTime(now.year, 1, 1);
-    return end.difference(start).inDays + 1;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final dayOfYear = getDayOfYear();
-    final totalDays = getTotalDaysInYear();
-    final daysLeft = totalDays - dayOfYear;
+    final int dayOfYear = getDayOfYear();
+    final int totalDays = getTotalDaysInYear();
+    final int daysLeft = totalDays - dayOfYear;
 
-    const dotSize = 3.0;
-    const crossAxisSpacing = 8.0;
-    const horizontalPadding = 12.0;
-    const verticalPadding = 12.0;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          const double dotSize = 3.0; // match DayDot size
+          const double topReservedHeight = 130.0;
 
-    return Container(
-      color: Colors.black,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(horizontalPadding),
-          child: Column(
+          final double gridAreaWidth = constraints.maxWidth;
+          final double gridAreaHeight =
+              constraints.maxHeight - topReservedHeight;
+
+          // ✅ 尝试找到最合适的列数，使得能容纳至少 totalDays 个点
+          int bestColumnCount = 1;
+          int bestRowCount = totalDays;
+
+          for (int columns = 1; columns <= totalDays; columns++) {
+            int rows = (totalDays / columns).ceil();
+
+            double hSpacing =
+                (gridAreaWidth - columns * dotSize) / (columns - 1);
+            double vSpacing = (gridAreaHeight - rows * dotSize) / (rows - 1);
+
+            if (hSpacing > 0 &&
+                vSpacing > 0 &&
+                (hSpacing - vSpacing).abs() < 4) {
+              // 找到间距比较接近理想方格的情况
+              bestColumnCount = columns;
+              bestRowCount = rows;
+              break;
+            }
+          }
+
+          final double hSpacing =
+              (gridAreaWidth - bestColumnCount * dotSize) /
+              (bestColumnCount - 1);
+          final double vSpacing =
+              (gridAreaHeight - bestRowCount * dotSize) / (bestRowCount - 1);
+
+          return Column(
             children: [
-              // 文字区域由系统占高
-              Text(
-                '$totalDays ••• days',
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
+              const SizedBox(height: 50),
+              Column(
+                children: [
+                  Text(
+                    '$totalDays ••• days',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '$daysLeft days left this year',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              Text(
-                '$daysLeft days left this year',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: verticalPadding),
-
-              // 点阵区域
               Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final availableWidth = constraints.maxWidth;
-                    final availableHeight = constraints.maxHeight;
-
-                    // 横向：一行最多放多少列（点 + 间距）
-                    final crossAxisCount = (availableWidth / (dotSize + crossAxisSpacing)).floor();
-
-                    // 需要多少行才能放下 totalDays 个点
-                    final requiredRows = (totalDays / crossAxisCount).ceil();
-
-                    // 多加一行：用于空白
-                    //final  requiredRows = requiredRows + 1;
-
-                    // 每个点占据 dotSize，高度剩下的都给间距分掉
-                    final totalDotHeight = requiredRows * dotSize;
-
-                    // 计算行间距（剩下的空间均分到 requiredRows - 1 个间隔）
-                    final mainAxisSpacing = (availableHeight - totalDotHeight) / (requiredRows);
-
-                    // 点的总数：只到 totalDays
-                    return GridView.builder(
+                child: Center(
+                  child: SizedBox(
+                    width: gridAreaWidth,
+                    height: gridAreaHeight,
+                    child: GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: crossAxisSpacing,
-                        mainAxisSpacing: mainAxisSpacing,
-                      ),
+                      padding: EdgeInsets.zero,
                       itemCount: totalDays,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: bestColumnCount,
+                        crossAxisSpacing: hSpacing,
+                        mainAxisSpacing: vSpacing,
+                      ),
                       itemBuilder: (context, index) {
-                        final isPast = index < dayOfYear;
-                        final isToday = index == dayOfYear;
-                        return DayDot(isPast: isPast, isToday: isToday);
+                        return DayDot(
+                          isPast: index < dayOfYear,
+                          isToday: index == dayOfYear - 1,
+                        );
                       },
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              )
+              ),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
