@@ -2,15 +2,8 @@
 
 A new Flutter project.
 
-## Getting Started
+![image](https://github.com/user-attachments/assets/fad0da62-cb12-4da8-a657-57c85fc2d681)
+<img width="358" alt="image" src="https://github.com/user-attachments/assets/2b5571b0-c0ae-4c4c-a9c8-165c87b6a231" />
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+It looks like this on iPhone 16 plus ios 18.4 right now :)
+I am working on it.
