@@ -2,7 +2,8 @@
 
 A new Flutter project.
 
-<img width="358" alt="image" src="https://github.com/user-attachments/assets/ffcbfb32-a228-40eb-999e-8ac3e7bb3bc1" />
+<img width="373" alt="image" src="https://github.com/user-attachments/assets/5fe44772-0635-447b-bcd6-b3891afaec5b" />
+
 
 <img width="358" alt="image" src="https://github.com/user-attachments/assets/2b5571b0-c0ae-4c4c-a9c8-165c87b6a231" />
 
