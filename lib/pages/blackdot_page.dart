@@ -30,7 +30,7 @@ class BlackDotPage extends StatelessWidget {
         // ✅ 改动①：添加 SafeArea，避免遮挡
         child: LayoutBuilder(
           builder: (context, constraints) {
-            const double dotSize = 3.0; // match DayDot size
+            const double dotSize = DayDot.dotSize; // match DayDot size
             const double topReservedHeight = 130.0;
 
             final double gridAreaWidth = constraints.maxWidth;
@@ -111,10 +111,7 @@ class BlackDotPage extends StatelessWidget {
                           mainAxisSpacing: vSpacing,
                         ),
                         itemBuilder: (context, index) {
-                          return DayDot(
-                            isPast: index < dayOfYear,
-                            isToday: index == dayOfYear - 1,
-                          );
+                          return DayDot(isPast: index <= dayOfYear - 1);
                         },
                       ),
                     ),
