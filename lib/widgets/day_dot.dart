@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DayDot extends StatelessWidget {
-  static const double dotSize = 3.0;
+  static const double dotSize = 4.0;
   final bool isPast;
 
   const DayDot({super.key, required this.isPast});

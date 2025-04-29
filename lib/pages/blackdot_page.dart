@@ -99,8 +99,8 @@ class BlackDotPage extends StatelessWidget {
                 Expanded(
                   child: Center(
                     child: SizedBox(
-                      width: gridAreaWidth * 0.98, // ✅ 改动③：略微缩小宽度
-                      height: gridAreaHeight * 0.98, // ✅ 改动④：略微缩小高度
+                      width: gridAreaWidth * 0.95, // ✅ 改动③：略微缩小宽度
+                      //height: gridAreaHeight * 0.98, // ✅ 改动④：略微缩小高度
                       child: GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         padding: EdgeInsets.zero,

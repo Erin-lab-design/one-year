@@ -5,9 +5,10 @@ import 'pages/home_page.dart';
 void main() {
   runApp(const OneYearApp());
 }
+
 //这就是整个 App 的包裹器，定义了主题、标题、默认页面。
 class OneYearApp extends StatelessWidget {
-  const OneYearApp({super.key});
+  const OneYearApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
